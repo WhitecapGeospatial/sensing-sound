@@ -1,0 +1,49 @@
+{
+  "surface": {
+    "panelStart": "rgba(13, 148, 136, 0.90)",
+    "panelEnd": "rgba(15, 118, 110, 0.70)",
+    "overlayTop": "rgba(19, 78, 74, 0.20)",
+    "overlayBottom": "rgba(45, 109, 117, 0.4)",
+    "panelSoft": "rgba(255, 255, 255, 0.05)",
+    "panelSoftStrong": "rgba(255, 255, 255, 0.10)"
+  },
+  "text": {
+    "primary": "rgba(255, 255, 255, 1)",
+    "muted": "rgba(255, 255, 255, 0.70)",
+    "subtle": "rgba(255, 255, 255, 0.90)"
+  },
+  "accent": {
+    "primary": "#ffedbb",
+    "primarySoft": "rgba(251, 146, 60, 0.20)",
+    "primaryHover": "rgba(249, 115, 22, 0.90)",
+    "secondary": "#ffddb8"
+  },
+  "state": {
+    "listener": "rgba(77, 211, 248, 0.6)",
+    "sound": "rgba(216, 179, 68, 0.6)",
+    "calm": "rgba(4, 58, 57, 0.6)",
+    "winter": "rgba(43, 203, 152, 0.6)",
+    "storm": "rgba(237, 126, 42, 0.6)",
+    "cruiseShip": "rgba(255, 25, 25, 0.6)",
+    "calmSolid": "rgb(21, 98, 96)",
+    "winterSolid": "rgb(43, 203, 152)",
+    "stormSolid": "rgb(237, 126, 42)",
+    "cruiseShipSolid": "rgb(175, 56, 56)"
+  },
+  "bar": {
+    "active": "rgba(249, 115, 22, 0.90)",
+    "reference": "rgba(95, 172, 162, 0.3)",
+    "referenceBorder": "rgba(94, 234, 212, 0.40)",
+    "calm": "rgba(4, 58, 57, 0.6)",
+    "winter": "rgba(43, 203, 152, 0.6)",
+    "storm": "rgba(237, 126, 42, 0.6)",
+    "cruiseShip": "rgba(255, 25, 25, 0.6)"
+  },
+  "signal": {
+    "listenerRing": "rgba(77, 211, 248, 0.6)",
+    "sourceRing": "rgba(250, 204, 21, 0.75)",
+    "listenerStroke": "rgba(77, 211, 248, 0.6)",
+    "sourceStroke": "rgba(253, 224, 71, 0.70)",
+    "flowDot": "#fde047"
+  }
+}
