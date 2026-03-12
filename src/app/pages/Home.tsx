@@ -10,7 +10,7 @@ export default function Home() {
   const [condition, setCondition] = useState<AmbientCondition>("winter");
 
   return (
-    <div className="relative w-full h-screen overflow-hidden">
+    <div className="relative w-full min-h-screen overflow-x-hidden lg:h-screen lg:overflow-hidden">
       {/* Background gradient */}
       <div
         className="absolute inset-0"
@@ -24,17 +24,21 @@ export default function Home() {
       <Navigation />
 
       {/* Ambient Condition Selector */}
-      <AmbientSelector selected={condition} onChange={setCondition} />
+      <div className="hidden lg:block">
+        <AmbientSelector selected={condition} onChange={setCondition} />
+      </div>
 
       {/* Sound Visualization Panel */}
-      <SoundVisualization 
-        listener={listener} 
-        source={source} 
-        condition={condition}
-        onListenerChange={setListener}
-        onSourceChange={setSource}
-        onConditionChange={setCondition}
-      />
+      <div className="relative z-10 px-3 pb-4 pt-28 lg:px-0 lg:pb-0 lg:pt-0">
+        <SoundVisualization
+          listener={listener}
+          source={source}
+          condition={condition}
+          onListenerChange={setListener}
+          onSourceChange={setSource}
+          onConditionChange={setCondition}
+        />
+      </div>
     </div>
   );
 }

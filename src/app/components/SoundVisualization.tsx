@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Activity, Ruler, ChevronLeft, ChevronRight, ChevronDown, Play, Pause, Volume2, VolumeX } from "lucide-react";
+import { Activity, Ruler, ChevronLeft, ChevronRight, ChevronDown, Play, Pause, Volume2, VolumeX, Menu, X } from "lucide-react";
 import { soundData, ListenerType, SourceType, AmbientCondition } from "../data/soundData";
 import harborSealImage from "@/assets/ae6420e7e13fdb75fda431bbe0983f9edfff3ba0.png";
 import dolphinImage from "@/assets/6e437c4de464e8599fcd42edacd7e3b7aa527daf.png";
@@ -48,6 +48,7 @@ export default function SoundVisualization({ listener, source, condition, onList
   const [isAudioMuted, setIsAudioMuted] = useState(false);
   const [listenerScrollOffset, setListenerScrollOffset] = useState(0);
   const [sourceScrollOffset, setSourceScrollOffset] = useState(0);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const listenerWheelRemainderRef = useRef(0);
   const sourceWheelRemainderRef = useRef(0);
   const listenerSnapTimerRef = useRef<number | null>(null);
@@ -476,9 +477,117 @@ export default function SoundVisualization({ listener, source, condition, onList
   };
 
   return (
-    <div className="fixed top-4 left-4 right-4 bottom-4 z-10 flex gap-3">
+    <div className="relative z-10 flex flex-col gap-3 lg:fixed lg:inset-4 lg:flex-row">
+      <button
+        type="button"
+        onClick={() => setShowMobileMenu(true)}
+        className="fixed left-4 top-28 z-30 inline-flex items-center gap-2 rounded-lg bg-black/45 px-3 py-2 text-sm font-semibold text-white shadow-lg backdrop-blur-sm lg:hidden"
+      >
+        <Menu className="h-4 w-4" />
+        Menu
+      </button>
+
+      {showMobileMenu && (
+        <div className="fixed inset-0 z-40 lg:hidden">
+          <button
+            type="button"
+            onClick={() => setShowMobileMenu(false)}
+            className="absolute inset-0 bg-black/55"
+            aria-label="Close mobile menu overlay"
+          />
+          <div className="absolute inset-y-0 left-0 w-[85%] max-w-sm ss-panel-gradient shadow-2xl overflow-y-auto">
+            <div className="p-4">
+              <div className="mb-4 flex items-center justify-between">
+                <div className="inline-block rounded-lg ss-panel-soft-strong px-4 py-2">
+                  <img src={logoImage} alt="SensingSound" className="h-8 w-auto" />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowMobileMenu(false)}
+                  className="rounded-md bg-white/10 p-2 text-white"
+                  aria-label="Close mobile menu"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              <div className="mb-4 rounded-lg ss-panel-soft p-3">
+                <div className="mb-2 text-xs font-bold uppercase tracking-wide ss-accent-text">Context</div>
+                <div className="grid grid-cols-2 gap-2">
+                  {contextDisplayOrder.map((conditionType) => (
+                    <button
+                      key={`mobile-${conditionType}`}
+                      type="button"
+                      onClick={() => {
+                        onConditionChange(conditionType);
+                        setShowMobileMenu(false);
+                      }}
+                      className={`rounded-md px-2 py-2 text-xs font-semibold text-white transition-colors ${
+                        condition === conditionType ? "bg-orange-500" : "bg-white/10"
+                      }`}
+                    >
+                      {conditionType === "cruiseShip"
+                        ? "Cruise Ship"
+                        : conditionType === "winter"
+                          ? "Wind & Waves"
+                          : conditionType === "storm"
+                            ? "Storm"
+                            : "Calm Seas"}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mb-4 rounded-lg ss-panel-soft p-3">
+                <div className="mb-2 text-xs font-bold uppercase tracking-wide ss-accent-text">Listener</div>
+                <div className="grid grid-cols-1 gap-2">
+                  {uniqueListeners.map((listenerType) => (
+                    <button
+                      key={`mobile-listener-${listenerType}`}
+                      type="button"
+                      onClick={() => {
+                        onListenerChange(listenerType);
+                        setShowMobileMenu(false);
+                      }}
+                      className={`flex items-center gap-2 rounded-md px-2 py-2 text-left text-sm text-white transition-colors ${
+                        listener === listenerType ? "ss-selected-listener ring-2 ring-white" : "bg-white/10"
+                      }`}
+                    >
+                      <img src={getAnimalIcon(listenerType.toLowerCase())} alt="" className="h-8 w-8 object-contain" />
+                      <span>{formatAnimalLabel(listenerType)}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-lg ss-panel-soft p-3">
+                <div className="mb-2 text-xs font-bold uppercase tracking-wide ss-accent-text">Sound</div>
+                <div className="grid grid-cols-1 gap-2">
+                  {sourceOptions.map((sourceType) => (
+                    <button
+                      key={`mobile-source-${sourceType}`}
+                      type="button"
+                      onClick={() => {
+                        onSourceChange(sourceType);
+                        setShowMobileMenu(false);
+                      }}
+                      className={`flex items-center gap-2 rounded-md px-2 py-2 text-left text-sm text-white transition-colors ${
+                        source === sourceType ? "ss-selected-sound ring-2 ring-white" : "bg-white/10"
+                      }`}
+                    >
+                      <img src={getAnimalIcon(sourceType.toLowerCase())} alt="" className="h-8 w-8 object-contain" />
+                      <span className="italic">{getSoundFullName(sourceType)}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Left Sidebar - Full height, scrollable independently */}
-      <div className="w-96 ss-panel-gradient backdrop-blur-sm rounded-2xl shadow-2xl overflow-y-auto">
+      <div className="hidden w-96 ss-panel-gradient backdrop-blur-sm rounded-2xl shadow-2xl overflow-y-auto lg:block">
         <div className="p-5">
           {/* SensingSound Logo */}
           <div className="mb-4">
@@ -661,9 +770,9 @@ export default function SoundVisualization({ listener, source, condition, onList
       </div>
 
       {/* Right side - contains middle panel, optional right panel, and bottom bar chart */}
-      <div className="flex-1 flex flex-col gap-3">
+      <div className="flex min-h-0 flex-1 flex-col gap-3">
         {/* Top row - Listening scene and hearing ranges - 50% height */}
-        <div className="flex gap-3" style={{ flex: '0 0 calc(50% - 6px)' }}>
+        <div className="flex flex-col gap-3 lg:h-[calc(50%-6px)] lg:flex-row">
           {/* Main Visualization Panel - Center */}
           <div className="flex-1 ss-panel-gradient backdrop-blur-sm rounded-2xl shadow-2xl overflow-y-auto">
             <div className="p-5">
@@ -675,7 +784,7 @@ export default function SoundVisualization({ listener, source, condition, onList
                     Detection Distance Comparison
                   </div>
                 </div>
-                <div className="mt-2 grid grid-cols-2 gap-3 items-start">
+                <div className="mt-2 grid grid-cols-1 gap-3 items-start md:grid-cols-2">
                   <div className="relative">
                     <div className="mb-1 ss-accent-text text-[11px] uppercase tracking-wide font-bold">
                       Select Listener
@@ -784,8 +893,8 @@ export default function SoundVisualization({ listener, source, condition, onList
               </div>
               
               {/* Animal Pairing Visualization + Hearing Ranges */}
-              <div className="flex gap-3 h-96">
-                <div className="relative flex-1 bg-white/5 rounded-lg overflow-hidden">
+              <div className="flex h-auto flex-col gap-3 lg:h-96 lg:flex-row">
+                <div className="relative h-[34rem] flex-1 bg-white/5 rounded-lg overflow-hidden lg:h-auto">
                   {/* Underwater Background */}
                   <img
                     src={underwaterBg}
@@ -855,7 +964,7 @@ export default function SoundVisualization({ listener, source, condition, onList
 
                 {/* Rockfish audio panel beside listening scene */}
                 {currentSourceAudio && (
-                  <div className="w-80 ss-panel-soft rounded-lg p-4 border border-white/20">
+                  <div className="w-full ss-panel-soft rounded-lg p-4 border border-white/20 lg:w-80">
                     <div className="flex items-center justify-between gap-2 mb-3">
                       <div className="ss-accent-text text-sm uppercase tracking-wider font-bold">
                         {getSoundFullName(source)}
@@ -902,12 +1011,12 @@ export default function SoundVisualization({ listener, source, condition, onList
                 )}
 
                 <div
-                  className={`transition-all duration-500 ease-in-out ss-panel-gradient backdrop-blur-sm rounded-2xl overflow-hidden ${
-                    showHearingRanges ? 'w-96 opacity-100' : 'w-0 opacity-0'
+                  className={`w-full transition-all duration-500 ease-in-out ss-panel-gradient backdrop-blur-sm rounded-2xl overflow-hidden ${
+                    showHearingRanges ? 'max-h-[24rem] opacity-100 lg:w-96 lg:max-h-none' : 'max-h-0 opacity-0 lg:w-0 lg:max-h-none'
                   }`}
                 >
                   {showHearingRanges && (
-                    <div className="w-96 h-full p-6">
+                    <div className="h-full w-full p-6">
                       <Frame8 />
                     </div>
                   )}
@@ -921,7 +1030,7 @@ export default function SoundVisualization({ listener, source, condition, onList
         </div>
 
         {/* Bottom row - Bar chart + listener pills - 50% height */}
-        <div className="ss-panel-gradient backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden flex flex-col" style={{ flex: '0 0 calc(50% - 6px)' }}>
+        <div className="ss-panel-gradient backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden flex min-h-[30rem] flex-col lg:min-h-0 lg:h-[calc(50%-6px)]">
           <div className="p-5 flex-shrink-0">
             <div className="ss-accent-soft-bg rounded-lg p-4 border-l-4 ss-accent-border">
               <div className="flex items-center gap-3 mb-2">
@@ -936,7 +1045,7 @@ export default function SoundVisualization({ listener, source, condition, onList
             </div>
           </div>
             
-          <div className="flex gap-3 px-5 pb-5 flex-1 overflow-hidden">
+          <div className="flex gap-3 px-5 pb-5 flex-1 overflow-x-auto lg:overflow-hidden">
             {/* Y-axis column + spacer to keep plot row aligned with bars only */}
             <div className="w-20 flex-shrink-0 flex flex-col gap-3">
               <div className="relative flex-1 border-r border-white/30">
@@ -957,7 +1066,7 @@ export default function SoundVisualization({ listener, source, condition, onList
             </div>
 
             {/* Plot + listener pills */}
-            <div className="flex-1 flex flex-col gap-3 min-h-0">
+            <div className="flex min-h-[18rem] min-w-[34rem] flex-1 flex-col gap-3 lg:min-h-0 lg:min-w-0">
               <div className="relative flex-1 flex gap-2 items-end">
                 {layeredData.map((item) => {
                   const isActive = item.key === currentKey;
@@ -1020,7 +1129,7 @@ export default function SoundVisualization({ listener, source, condition, onList
               </div>
 
               {/* Listener Group Chips */}
-              <div className="h-[7.5rem] flex gap-2">
+              <div className="hidden h-[7.5rem] gap-2 lg:flex">
                 {/* Harbor Seal Chip - First 4 bars */}
                 <div className="flex-1" style={{ flex: '4' }}>
                   <div className="bg-white/12 border border-white/20 text-white px-3 py-2 rounded-xl flex items-start justify-start gap-3 h-full">
