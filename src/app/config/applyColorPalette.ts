@@ -1,7 +1,9 @@
 import colorPalette from "./colorPalette.json";
 
 type PaletteValue = string | number | boolean | null;
-type PaletteNode = Record<string, PaletteNode | PaletteValue>;
+interface PaletteNode {
+  [key: string]: PaletteNode | PaletteValue;
+}
 
 function toKebabCase(input: string): string {
   return input.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);

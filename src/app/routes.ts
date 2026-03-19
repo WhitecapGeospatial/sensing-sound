@@ -5,11 +5,11 @@ import About from "./pages/About";
 export const router = createBrowserRouter([
   {
     path: "/",
-    Component: Home,
+    Component: About,
   },
   {
-    path: "/about",
-    Component: About,
+    path: "/app",
+    Component: Home,
   },
 ], {
   basename: import.meta.env.BASE_URL,

@@ -1,95 +1,74 @@
-# SensingSound Game Dashboard
+# SensingSound
 
-SensingSound is an interactive web experience about underwater acoustics in Monterey Bay. Users compare how far marine animals can detect sounds under changing ambient conditions such as calm seas, winter wind and waves, storm events, and cruise ship noise.
+SensingSound is an interactive web application about underwater acoustics in Monterey Bay. It lets users explore a central question: **how far can one marine animal hear another, and how does ocean noise change that distance?**
 
-## Website Overview
+The app models this around two core concepts:
 
-The app has two routes:
+- **AudioParticipant** -- a marine animal that can produce sound (source), detect sound (listener), or both. Each participant carries a `Noise` (an audio clip and spectrogram of the sound it makes), a list of other participants it can hear (`listens_to`), and the acoustic detection data for each of those pairings across four ocean conditions.
+- **Ocean condition** -- the ambient noise context (`calm`, `winter`, `storm`, `cruiseShip`). Switching conditions recalculates every detection distance in the app.
 
-- `/`: Interactive dashboard for comparing listener, sound source, and environmental context.
-- `/about`: Project background, science context, collaborators, and funders.
+Users pick a listener, a source, and an ocean condition. The app derives the detection distance from the listener's embedded data for that source under that condition, and presents it through an animated underwater scene, a spectrogram audio player, a hearing range frequency chart, and a log-scale bar chart comparing all 9 valid pairings.
 
-The home dashboard is designed around one core question: how does background noise change sound perception distance for different species pairings?
+## Participants
 
-## What Users Can Do
+Four species are modeled, producing 9 valid listener/source combinations:
 
-- Select an ocean context: `Calm Seas`, `Wind & Waves`, `Storm Event`, or `Cruise Ship`.
-- Select a listener: `Harbor Seal`, `Bottlenose Dolphin`, or `Killer Whale`.
-- Select a sound source: `Rockfish`, `Harbor Seal`, `Bottlenose Dolphin`, or `Killer Whale`.
-- Compare detection distances across all valid listener/source pairs in a log-scale bar chart.
-- Inspect relative decreases from calm conditions in noisier contexts.
-- Listen to source audio clips and view synchronized spectrogram previews.
-- Open and close the hearing ranges panel from the listening scene.
+| Participant        | Can listen | Can produce sound | Listens to                                       |
+|--------------------|------------|-------------------|--------------------------------------------------|
+| Rockfish           | no         | yes (grunt)       | --                                               |
+| Harbor Seal        | yes        | yes (roar)        | Rockfish, Harbor Seal, Killer Whale, Bottlenose Dolphin |
+| Bottlenose Dolphin | yes        | yes (whistle)     | Killer Whale, Bottlenose Dolphin                 |
+| Killer Whale       | yes        | yes (call)         | Harbor Seal, Killer Whale, Bottlenose Dolphin    |
 
-## Dashboard Features
+Each detection entry stores a peak frequency, third-octave band level, and distance values (in km) for calm, winter, storm, and cruise ship conditions. Distances range from 20 meters (Harbor Seal hearing a Rockfish grunt in cruise ship noise) to 73 km (Harbor Seal hearing a Killer Whale call in calm seas).
 
-- **Detection Distance Comparison panel**: Quick listener and source selection using dropdowns with species imagery.
-- **Listening scene**: Animated listener and source rings, scientific/common names, and a live `Sound Perception Distance` readout.
-- **Hearing ranges panel**: Toggleable side panel for additional hearing context.
-- **Audio and spectrogram panel**: Play/pause and mute controls with playback progress over spectrogram images.
-- **Detection Ranges chart**: Log-scaled bars with calm reference bars and context-specific overlays.
-- **Pairing shortcuts**: Listener chips and source buttons jump directly to specific pairings.
-- **Invalid pairing handling**: If a listener/source combination is unavailable in the dataset, the UI shows a notice and auto-reverts to a valid pair.
+## Dashboard
 
-## Species and Data Model
+The home page (`/app`) presents six components driven by a shared Zustand store:
 
-Core acoustic data lives in `src/app/data/soundData.ts`.
+- **ConditionSelector** -- vertical slider and buttons to choose ocean context.
+- **AudioParticipantSelector** (x2) -- carousel pickers for listener and source.
+- **SceneViewer** -- animated underwater scene showing the selected listener, source, and computed detection distance.
+- **AudioViewer** -- play/pause the source animal's sound with a spectrogram progress overlay.
+- **HearingRangeViewer** -- frequency range chart comparing hearing across species and humans.
+- **DetectionRanges** -- log-scale bar chart of all 9 pairings under the current condition, with calm-baseline reference bars and percentage-decrease labels.
 
-Each valid pairing stores:
-
-- `peakFrequency`
-- `thirdOctaveBand`
-- Detection distance values for `calm`, `winter`, `storm`, and `cruiseShip`
-
-The current dataset includes 9 valid listener/source combinations (not all theoretical combinations are present).
-
-The About page also presents the transmission-loss framing used in the exhibit narrative:
-
-`DT = SL - 15log(r) - ar`
+The About page (`/`) presents project background, scientific framing (transmission loss equation `DT = SL - 15log(r) - ar`), collaborators, and funders.
 
 ## Tech Stack
 
-- React + TypeScript
-- React Router
-- Vite
-- Tailwind CSS utilities plus project-specific CSS variables
+- React 18 + TypeScript
+- Vite 6
+- Zustand 5 (global state)
+- React Router 7
+- Tailwind CSS v4 + custom `--ss-*` design tokens
 - Lucide icons
 
 ## Local Development
 
-Install dependencies:
-
 ```bash
-npm i
+pnpm install
+pnpm dev
 ```
 
-Start the development server:
+Production build:
 
 ```bash
-npm run dev
+pnpm build
 ```
 
-Create a production build:
+## Key Files
 
-```bash
-npm run build
-```
-
-## Key Project Files
-
-- `src/app/routes.ts`: Route definitions for `/` and `/about`.
-- `src/app/pages/Home.tsx`: Main interactive dashboard page.
-- `src/app/pages/About.tsx`: Background, scientific framing, and credits.
-- `src/app/components/SoundVisualization.tsx`: Core interaction and visualization logic.
-- `src/app/components/MontereyBayMap.tsx`: Map-based source marker visualization.
-- `src/app/components/PolarPlot.tsx`: Relative context decrease radial chart component.
-- `src/app/data/soundData.ts`: Detection distance and acoustic metadata.
-- `src/app/config/colorPalette.json`: Theme tokens applied at runtime.
-- `src/app/config/applyColorPalette.ts`: Converts palette JSON into CSS custom properties.
+| File | Purpose |
+|------|---------|
+| `src/app/types/index.ts` | Domain types: `AudioParticipant`, `Noise`, `DetectionData`, `AmbientCondition` |
+| `src/app/data/participants.ts` | Four participant objects with embedded detection distances and `listens_to` wiring |
+| `src/app/store/useSoundStore.ts` | Zustand store: selected listener, source, condition, and derived distance |
+| `src/app/utils/formatting.ts` | Shared display helpers |
+| `src/app/pages/Home.tsx` | Main dashboard layout |
+| `src/app/pages/About.tsx` | Project background, science, credits |
+| `src/app/config/colorPalette.json` | Theme tokens applied as CSS custom properties at runtime |
 
 ## Collaborators and Funding
 
-The website content credits collaboration across UC Santa Cruz, Monterey Bay Aquarium Research Institute, and Middlebury Institute, with funding support including NOAA, the Packard Foundation, and UC Santa Cruz Science.
-The website content credits collaboration across UC Santa Cruz, Monterey Bay Aquarium Research Institute, and Middlebury Institute, with funding support including NOAA, the Packard Foundation, and UC Santa Cruz Science.
-
-
+The project is a collaboration across UC Santa Cruz, Monterey Bay Aquarium Research Institute, and the Middlebury Institute, with funding support from NOAA, the Packard Foundation, and UC Santa Cruz Science.

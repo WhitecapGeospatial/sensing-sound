@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { ArrowLeft, Users, Waves, Ship, AlertCircle } from "lucide-react";
+import { Users, Waves, Ship, AlertCircle } from "lucide-react";
 import kelpForestImage from "@/assets/466eeefa090642bc63ad30b19adb04bdeebda888.png";
 import logoImage from "@/assets/9962ff5db39642ae80b1efdc857274dd2ff0055a.png";
 import harborSealImage from "@/assets/ae6420e7e13fdb75fda431bbe0983f9edfff3ba0.png";
@@ -20,14 +20,6 @@ export default function About() {
       <div className="fixed inset-0 bg-teal-900/80 backdrop-blur-sm -z-10" />
 
       <div className="max-w-4xl mx-auto px-8 py-16">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 text-orange-400 hover:text-orange-300 transition-colors mb-8"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          <span className="font-semibold">Back to Game</span>
-        </Link>
-
         <div className="text-center mb-12">
           <div className="flex justify-center mb-4">
             <img src={logoImage} alt="SensingSound" className="h-20 w-auto" />
@@ -35,6 +27,15 @@ export default function About() {
           <p className="text-xl text-white/90 italic">
             Exploring Underwater Acoustics in Monterey Bay
           </p>
+        </div>
+
+        <div className="flex justify-center mb-8">
+          <Link
+            to="/app"
+            className="inline-flex items-center gap-2 mt-6 mx-auto px-6 py-3 rounded-full bg-orange-500 hover:bg-orange-400 text-white font-semibold transition-colors"
+          >
+            Explore
+          </Link>
         </div>
 
         <div className="space-y-6">
