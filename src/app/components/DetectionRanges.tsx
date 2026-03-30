@@ -137,6 +137,7 @@ export default function DetectionRanges() {
   const condition = useSoundStore((s) => s.oceanCondition);
   const listener = useSoundStore((s) => s.listener);
   const source = useSoundStore((s) => s.source);
+  const language = useSoundStore((s) => s.language);
   const setListener = useSoundStore((s) => s.setListener);
   const setSource = useSoundStore((s) => s.setSource);
   const isMobile = useIsMobile();
@@ -239,7 +240,7 @@ export default function DetectionRanges() {
       : null;
     return (
       <div className="bg-gray-900 text-white text-[10px] px-2 py-1 rounded shadow-lg border border-white/10">
-        <div className="font-semibold">{data.source.name}</div>
+        <div className="font-semibold">{data.source.name[language]}</div>
         <div>{formatDistance(data.currentDistance)}</div>
         {condition !== "calm" && pct !== null && (
           <div className="text-teal-300 text-[9px] mt-0.5">
@@ -274,7 +275,7 @@ export default function DetectionRanges() {
                   <img
                     key={d.key}
                     src={d.source.icon}
-                    alt={d.source.name}
+                    alt={d.source.name.en}
                     className={`object-contain transition-all duration-200 ${isMobile ? "w-10 h-10" : "w-7 h-7"} ${d.source.id === source.id ? "opacity-100 scale-110" : "opacity-40"}`}
                   />
                 ))}
@@ -314,7 +315,7 @@ export default function DetectionRanges() {
               >
                 <img
                   src={group.listener.icon}
-                  alt={group.listener.name}
+                  alt={group.listener.name.en}
                   className="w-16 h-16 object-contain"
                 />
               </div>

@@ -54,6 +54,7 @@ function ParticipantIcon({
   onToggleMute?: () => void;
 }) {
   const cfg = sideConfig[side];
+  const language = useSoundStore((s) => s.language);
 
   const label = (
     <div className="text-white text-xs uppercase tracking-wider font-bold mb-2">{cfg.label}</div>
@@ -68,14 +69,14 @@ function ParticipantIcon({
         className="w-[8.8rem] h-[8.8rem] md:w-44 md:h-44 rounded-full border-8 bg-white/30 backdrop-blur-sm flex items-center justify-center p-4 shadow-2xl"
         style={{ borderColor: cfg.borderColor }}
       >
-        <img src={participant.icon} alt={participant.name} className="w-full h-full object-contain drop-shadow-lg" />
+        <img src={participant.icon} alt={participant.name.en} className="w-full h-full object-contain drop-shadow-lg" />
       </div>
     </div>
   );
 
   const nameBlock = (
     <>
-      <div className="mt-3 text-white text-xl drop-shadow-lg">{formatAnimalLabel(participant.name)}</div>
+      <div className="mt-3 text-white text-xl drop-shadow-lg">{formatAnimalLabel(participant.name[language])}</div>
       <div className="text-white/90 text-sm italic drop-shadow">{participant.scientificName}</div>
     </>
   );

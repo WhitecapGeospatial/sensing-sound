@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Info } from "lucide-react";
-import type { AmbientCondition } from "../types";
+import type { AmbientCondition, Language } from "../types";
 import { useSoundStore } from "../store/useSoundStore";
+import { usePanelCopy } from "../hooks/useSheetCopy";
 import {
   conditionOrder,
   conditionDisplayOrder,
@@ -11,16 +12,24 @@ import {
 } from "../data/conditions";
 import contextIcon from "@/assets/784a77a0f0c0038971397b6e6f7015e9b7c234e7.png";
 
+const CONTEXT_FALLBACK = {
+  Title: "SELECT CONTEXT",
+  "Volume label": "NOISE",
+};
+
 function ConditionPill({
   conditionType,
   isSelected,
   onSelect,
+  language,
 }: {
   conditionType: AmbientCondition;
   isSelected: boolean;
   onSelect: () => void;
+  language: Language;
 }) {
   const [showInfo, setShowInfo] = useState(false);
+  const info = conditionInfo[conditionType];
 
   return (
     <button
@@ -32,13 +41,13 @@ function ConditionPill({
       }`}
     >
       <img
-        src={conditionInfo[conditionType].icon}
+        src={info.icon}
         alt=""
         className={`w-8 h-8 object-contain ${isSelected ? "scale-110" : ""}`}
       />
       <div className="text-left leading-tight flex-1">
         <div className={`text-white text-xs font-semibold uppercase ${isSelected ? "font-bold" : ""}`}>
-          {conditionInfo[conditionType].title}
+          {info.title[language]}
         </div>
       </div>
       <div
@@ -49,7 +58,7 @@ function ConditionPill({
         <Info className="w-4 h-4 text-white/60 hover:text-white/90 cursor-help transition-colors" />
         {showInfo && (
           <div className="absolute right-0 top-full mt-2 bg-gray-900 text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap z-50 shadow-lg border border-white/10">
-            {conditionInfo[conditionType].description}
+            {info.description[language]}
           </div>
         )}
       </div>
@@ -60,17 +69,21 @@ function ConditionPill({
 export default function ConditionSelector() {
   const condition = useSoundStore((s) => s.oceanCondition);
   const setCondition = useSoundStore((s) => s.setOceanCondition);
+  const language = useSoundStore((s) => s.language);
   const currentContextIndex = conditionOrder.indexOf(condition);
+
+  const { copy } = usePanelCopy("Select Context");
+  const t = (key: string) => copy[key] || CONTEXT_FALLBACK[key as keyof typeof CONTEXT_FALLBACK] || "";
 
   return (
     <div className="ss-panel-soft rounded-lg p-3 h-full flex flex-col">
       <div className="flex items-center gap-2 ss-accent-text text-sm uppercase tracking-wider font-bold" style={{ flex: "0 0 20%" }}>
         <img src={contextIcon} alt="" className="w-5 h-5 object-contain opacity-80" />
-        <span>SELECT CONTEXT</span>
+        <span>{t("Title")}</span>
       </div>
       <div className="flex gap-3 items-stretch" style={{ flex: "0 0 80%" }}>
         <div className="w-10 flex flex-col items-center">
-          <div className="text-[9px] uppercase tracking-wide text-white/70 mb-1">NOISE</div>
+          <div className="text-[9px] uppercase tracking-wide text-white/70 mb-1">{t("Volume label")}</div>
           <div className="relative flex-1 w-full">
             <input
               type="range"
@@ -92,6 +105,7 @@ export default function ConditionSelector() {
               conditionType={conditionType}
               isSelected={condition === conditionType}
               onSelect={() => setCondition(conditionType)}
+              language={language}
             />
           ))}
         </div>

@@ -3,8 +3,12 @@ import type { AudioParticipant } from "../types";
 import { useSoundStore } from "../store/useSoundStore";
 import { listeners } from "../data/participants";
 import { formatAnimalLabel, getSoundFullName } from "../utils/formatting";
+import { usePanelCopy } from "../hooks/useSheetCopy";
 import listenerIcon from "@/assets/ca9fb87cf475c6320024953a6c99f360a8bb7fa4.png";
 import soundIcon from "@/assets/fdfd2fb83371a16d3a6b5ce24d5901f66d00b810.png";
+
+const LISTENER_FALLBACK = { Title: "SELECT LISTENER" };
+const SOUND_FALLBACK = { Title: "SELECT SOUND" };
 
 interface AudioParticipantSelectorProps {
   variant: "listener" | "source";
@@ -37,9 +41,13 @@ export default function AudioParticipantSelector({ variant }: AudioParticipantSe
   const setSelected = useSoundStore((s) => (variant === "listener" ? s.setListener : s.setSource));
   const listener = useSoundStore((s) => s.listener);
 
+  const panelName = variant === "listener" ? "Select Listener" : "Select Sound";
+  const fallback = variant === "listener" ? LISTENER_FALLBACK : SOUND_FALLBACK;
+  const { copy, isLoading } = usePanelCopy(panelName);
+  const t = (key: string) => copy[key] || fallback[key as keyof typeof fallback] || "";
+
   const items = variant === "listener" ? listeners : listener.listens_to;
   const icon = variant === "listener" ? listenerIcon : soundIcon;
-  const label = variant === "listener" ? "SELECT LISTENER" : "SELECT SOUND";
   const selectedClass = variant === "listener" ? "ss-selected-listener" : "ss-selected-sound";
 
   const [scrollOffset, setScrollOffset] = useState(0);
@@ -98,15 +106,26 @@ export default function AudioParticipantSelector({ variant }: AudioParticipantSe
     };
   }, []);
 
+  const language = useSoundStore((s) => s.language);
+
   const getItemLabel = (item: AudioParticipant): string => {
-    return variant === "source" ? getSoundFullName(item) : formatAnimalLabel(item.name);
+    return variant === "source" ? getSoundFullName(item, language) : formatAnimalLabel(item.name[language]);
   };
+
+  if (isLoading) {
+    return (
+      <div className="ss-panel-soft rounded-lg p-4 animate-pulse">
+        <div className="h-5 bg-white/20 rounded w-1/2 mb-4" />
+        <div className="bg-white/5 border border-white/20 rounded-xl p-2 h-24" />
+      </div>
+    );
+  }
 
   return (
     <div className="ss-panel-soft rounded-lg p-4">
       <div className="flex items-center gap-2 ss-accent-text text-base uppercase tracking-wider mb-4 font-bold">
         <img src={icon} alt="" className="w-5 h-5 object-contain opacity-80" />
-        <span>{label}</span>
+        <span>{t("Title")}</span>
       </div>
       <div
         className="bg-white/5 border border-white/20 rounded-xl p-2 overflow-hidden"

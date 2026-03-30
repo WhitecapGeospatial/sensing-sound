@@ -5,6 +5,7 @@ import { useSoundStore } from "../store/useSoundStore";
 import { conditionInfo, conditionOrder } from "../data/conditions";
 import { listeners, sources } from "../data/participants";
 import type { MobileMenuTarget } from "../store/useSoundStore";
+import LanguageToggle from "./LanguageToggle";
 
 const selectorButtons: { target: MobileMenuTarget; label: string }[] = [
   { target: "condition", label: "Condition" },
@@ -16,6 +17,7 @@ export default function Navigation() {
   const oceanCondition = useSoundStore((s) => s.oceanCondition);
   const listener = useSoundStore((s) => s.listener);
   const source = useSoundStore((s) => s.source);
+  const language = useSoundStore((s) => s.language);
   const mobileMenuTarget = useSoundStore((s) => s.mobileMenuTarget);
   const setMobileMenuTarget = useSoundStore((s) => s.setMobileMenuTarget);
   const setOceanCondition = useSoundStore((s) => s.setOceanCondition);
@@ -36,17 +38,17 @@ export default function Navigation() {
     if (mobileMenuTarget === "condition") {
       return conditionOrder
         .filter((c) => c !== oceanCondition)
-        .map((c) => ({ key: c, icon: conditionInfo[c].icon, label: conditionInfo[c].title, onSelect: () => { setOceanCondition(c); setMobileMenuTarget(null); } }));
+        .map((c) => ({ key: c, icon: conditionInfo[c].icon, label: conditionInfo[c].title[language], onSelect: () => { setOceanCondition(c); setMobileMenuTarget(null); } }));
     }
     if (mobileMenuTarget === "listener") {
       return listeners
         .filter((p) => p.id !== listener.id)
-        .map((p) => ({ key: p.id, icon: p.icon, label: p.name, onSelect: () => { setListener(p); setMobileMenuTarget(null); } }));
+        .map((p) => ({ key: p.id, icon: p.icon, label: p.name[language], onSelect: () => { setListener(p); setMobileMenuTarget(null); } }));
     }
     if (mobileMenuTarget === "source") {
       return sources
         .filter((p) => p.id !== source.id)
-        .map((p) => ({ key: p.id, icon: p.icon, label: p.name, onSelect: () => { setSource(p); setMobileMenuTarget(null); } }));
+        .map((p) => ({ key: p.id, icon: p.icon, label: p.name[language], onSelect: () => { setSource(p); setMobileMenuTarget(null); } }));
     }
     return [];
   })();
@@ -55,13 +57,16 @@ export default function Navigation() {
     <header className="flex-none z-20 bg-teal-900/60 backdrop-blur-sm">
       <div className="flex items-center justify-between px-4 md:px-6 py-3">
         <img src={logoImage} alt="Sensing Sound" className="h-8 md:h-10 w-auto" />
-        <Link
-          to="/"
-          className="flex items-center gap-2 px-3 py-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
-        >
-          <Info className="w-5 h-5 text-white" />
-          <span className="text-white text-sm font-medium">About</span>
-        </Link>
+        <div className="flex items-center gap-2">
+          <LanguageToggle />
+          <Link
+            to="/"
+            className="flex items-center gap-2 px-3 py-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+          >
+            <Info className="w-5 h-5 text-white" />
+            <span className="text-white text-sm font-medium">About</span>
+          </Link>
+        </div>
       </div>
 
       <div className="md:hidden flex items-center justify-around px-4 pb-2">

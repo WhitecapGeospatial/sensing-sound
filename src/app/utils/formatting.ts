@@ -1,4 +1,4 @@
-import type { AudioParticipant, AmbientCondition } from "../types";
+import type { AudioParticipant, AmbientCondition, Language } from "../types";
 import { allParticipants } from "../data/participants";
 
 export function formatDistance(dist: number): string {
@@ -29,19 +29,9 @@ export function getSoundDescriptor(participant: AudioParticipant): string {
   }
 }
 
-export function getSoundFullName(participant: AudioParticipant): string {
-  switch (participant.id) {
-    case "rockfish":
-      return "Rockfish Grunt";
-    case "harbor-seal":
-      return "Harbor Seal Roar";
-    case "bottlenose-dolphin":
-      return "Dolphin Whistle";
-    case "killer-whale":
-      return "Killer Whale Call";
-    default:
-      return participant.name;
-  }
+export function getSoundFullName(participant: AudioParticipant, language: Language = "en"): string {
+  if (participant.soundName) return participant.soundName[language];
+  return participant.name[language];
 }
 
 export function getConditionLabel(cond: AmbientCondition): string {

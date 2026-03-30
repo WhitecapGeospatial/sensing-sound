@@ -5,6 +5,7 @@ import { getSoundFullName, formatAudioTime } from "../utils/formatting";
 
 export default function AudioViewer() {
   const source = useSoundStore((s) => s.source);
+  const language = useSoundStore((s) => s.language);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const gainNodeRef = useRef<GainNode | null>(null);
@@ -15,7 +16,7 @@ export default function AudioViewer() {
 
   const audioFile = source.noise.audioFile;
   const spectrogram = source.noise.spectrogram;
-  const soundName = getSoundFullName(source);
+  const soundName = getSoundFullName(source, language);
 
   useEffect(() => {
     const saved = window.localStorage.getItem("ss-audio-muted");

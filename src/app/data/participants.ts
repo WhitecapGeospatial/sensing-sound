@@ -17,7 +17,8 @@ import harborSealRoarSpectrogram from "@/assets/Harbor-seal_roar_spectrogram.png
 
 export const rockfish: AudioParticipant = {
   id: "rockfish",
-  name: "Rockfish",
+  name: { en: "Rockfish", es: "Rockfish" },
+  soundName: { en: "Rockfish Grunt", es: "Gruñido de rockfish" },
   icon: rockfishIcon,
   scientificName: "Sebastes spp.",
   source: true,
@@ -29,7 +30,8 @@ export const rockfish: AudioParticipant = {
 
 export const harborSeal: AudioParticipant = {
   id: "harbor-seal",
-  name: "Harbor Seal",
+  name: { en: "Harbor Seal", es: "Foca de puerto" },
+  soundName: { en: "Harbor Seal Roar", es: "Rugido de foca de puerto" },
   icon: harborSealIcon,
   scientificName: "Phoca vitulina",
   source: true,
@@ -42,7 +44,8 @@ export const harborSeal: AudioParticipant = {
 
 export const bottlenoseDolphin: AudioParticipant = {
   id: "bottlenose-dolphin",
-  name: "Bottlenose Dolphin",
+  name: { en: "Bottlenose Dolphin", es: "Delfín nariz de botella" },
+  soundName: { en: "Dolphin Whistle", es: "Silbido de delfín" },
   icon: dolphinIcon,
   scientificName: "Tursiops truncatus",
   source: true,
@@ -54,7 +57,8 @@ export const bottlenoseDolphin: AudioParticipant = {
 
 export const killerWhale: AudioParticipant = {
   id: "killer-whale",
-  name: "Killer Whale",
+  name: { en: "Killer Whale", es: "Orca" },
+  soundName: { en: "Killer Whale Call", es: "Llamado de orca" },
   icon: killerWhaleIcon,
   scientificName: "Orcinus orca",
   source: true,

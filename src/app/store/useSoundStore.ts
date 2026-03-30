@@ -1,17 +1,19 @@
 import { create } from "zustand";
-import type { AmbientCondition, AudioParticipant, DetectionData } from "../types";
+import type { AmbientCondition, AudioParticipant, DetectionData, Language } from "../types";
 import { harborSeal, rockfish } from "../data/participants";
 
 export type MobileView = "scene" | "range";
 export type MobileMenuTarget = "condition" | "listener" | "source" | null;
 
 interface SoundStore {
+  language: Language;
   oceanCondition: AmbientCondition;
   listener: AudioParticipant;
   source: AudioParticipant;
   mobileView: MobileView;
   mobileMenuTarget: MobileMenuTarget;
 
+  setLanguage: (lang: Language) => void;
   setOceanCondition: (condition: AmbientCondition) => void;
   setListener: (participant: AudioParticipant) => void;
   setSource: (participant: AudioParticipant) => void;
@@ -23,12 +25,14 @@ interface SoundStore {
 }
 
 export const useSoundStore = create<SoundStore>()((set, get) => ({
+  language: "es",
   oceanCondition: "winter",
   listener: harborSeal,
   source: rockfish,
   mobileView: "scene",
   mobileMenuTarget: null,
 
+  setLanguage: (lang) => set({ language: lang }),
   setOceanCondition: (condition) => set({ oceanCondition: condition }),
   setListener: (participant) => set({ listener: participant }),
   setSource: (participant) => set({ source: participant }),

@@ -38,8 +38,28 @@ export const conditionSelectedClass: Record<AmbientCondition, string> = {
 };
 
 export const conditionInfo: Record<AmbientCondition, AmbientConditionInfo> = {
-  calm: { title: "CALM", subtitle: "Summer", description: "Quiet seas maximize listening distance.", icon: calmIcon },
-  winter: { title: "WIND & WAVES", subtitle: "Winter", description: "Surface chop masks distant calls.", icon: winterIcon },
-  storm: { title: "STORM", subtitle: "Heavy wind and waves", description: "High intensity ambient noise masks noise.", icon: stormIcon },
-  cruiseShip: { title: "CRUISE SHIP", subtitle: "Ship noise", description: "Engine hum narrows hearing range.", icon: cruiseShipIcon },
+  calm: {
+    title: { en: "Calm Seas", es: "Mares en calma" },
+    subtitle: { en: "Summer", es: "Verano" },
+    description: { en: "Quiet seas increase the listening range", es: "Los mares tranquilos maximizan la distancia de escucha." },
+    icon: calmIcon,
+  },
+  winter: {
+    title: { en: "Wind & Waves", es: "Viento y olas" },
+    subtitle: { en: "Winter", es: "Invierno" },
+    description: { en: "Wind and waves decrease the listening range", es: "El oleaje superficial enmascara llamadas distantes." },
+    icon: winterIcon,
+  },
+  storm: {
+    title: { en: "Storm", es: "Tormenta" },
+    subtitle: { en: "Heavy wind and waves", es: "Viento y oleaje intensos" },
+    description: { en: "Loud environmental noise constrains hearing.", es: "El ruido ambiental de alta intensidad enmascara sonidos." },
+    icon: stormIcon,
+  },
+  cruiseShip: {
+    title: { en: "Cruise Ship", es: "Crucero" },
+    subtitle: { en: "Ship noise", es: "Ruido de barco" },
+    description: { en: "Ship noise restricts listening space.", es: "El zumbido del motor reduce el rango de audición." },
+    icon: cruiseShipIcon,
+  },
 };
